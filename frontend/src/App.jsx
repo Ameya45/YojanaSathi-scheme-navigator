@@ -1514,7 +1514,7 @@ export default function App() {
       setPdfLoading(true)
       const form = profileData
       const res = await axios.post(
-        "http://127.0.0.1:8000/export-pdf",
+        `${API_BASE}/export-pdf`,
         {
           age: parseInt(form.age),
           gender: form.gender,
