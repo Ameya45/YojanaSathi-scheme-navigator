@@ -1249,7 +1249,7 @@ function Chatbot({ lang }) {
         ...m,
         {
           role: "ai",
-          text: "I couldn't reach the AI service at 127.0.0.1:8000 right now. Please make sure the backend is running and try again.",
+          text: "I couldn't reach the AI service at https://yojanasathi-api.onrender.com right now. Please make sure the backend is running and try again.",
         },
       ])
     } finally {
