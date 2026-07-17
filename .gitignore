@@ -1,0 +1,33 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+
+# Database
+data/users.db
+
+# Vector store (too large, will rebuild on deploy)
+data/chroma_db/
+
+# Environment
+.env
+*.env
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Whisper models (downloaded automatically)
+~/.cache/whisper/
+
+# HuggingFace cache
+~/.cache/huggingface/
