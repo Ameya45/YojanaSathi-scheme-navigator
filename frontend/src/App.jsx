@@ -563,18 +563,16 @@ function ProfileForm({
     }
     try {
       const res = await axios.post(`${API_BASE}/match`, payload, {
-        timeout: 12000,
+        timeout: 60000,
       })
       onResults(res.data, false, payload)
     } catch (err) {
       console.log("[v0] /match request failed:", err.message)
-      // Graceful fallback to demo data so the UI remains usable in preview.
-      onResults(
-        { total: DEMO_SCHEMES.length, schemes: DEMO_SCHEMES },
-        true,
-        payload,
+      setError(
+        "Could not connect to server. The server may be waking up — please wait 30 seconds and try again.",
       )
-      setError(t.matchBackendFallback)
+      setLoading(false)
+      return
     } finally {
       setLoading(false)
     }
@@ -1410,7 +1408,7 @@ export default function App() {
   const [caste, setCaste] = useState("general")
   const [income, setIncome] = useState(150000)
   const [occupation, setOccupation] = useState("farmer")
-  const [state, setState] = useState("")
+  const [state, setState] = useState("Maharashtra")
   const [domicileYears, setDomicileYears] = useState(5)
   const [homeState, setHomeState] = useState("")
 
