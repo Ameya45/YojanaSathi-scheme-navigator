@@ -222,7 +222,7 @@ function Navbar({ dark, toggleDark, lang, setLang, user, setShowAuth, setAuthMod
 
         <div className="flex items-center gap-2">
           {user ? (
-            <div className="hidden sm:flex items-center gap-3">
+            <div className="flex items-center gap-3">
               <div className="flex items-center gap-2 glass rounded-lg px-3 py-2 text-sm font-medium text-[var(--foreground)]">
                 <span className="inline-flex h-2 w-2 rounded-full bg-violet-600" />
                 {user.name || user.email}
@@ -235,7 +235,7 @@ function Navbar({ dark, toggleDark, lang, setLang, user, setShowAuth, setAuthMod
               </button>
             </div>
           ) : (
-            <div className="hidden sm:flex items-center gap-2">
+            <div className="flex items-center gap-2">
               <button
                 onClick={() => {
                   setAuthMode("login")
@@ -256,7 +256,7 @@ function Navbar({ dark, toggleDark, lang, setLang, user, setShowAuth, setAuthMod
               </button>
             </div>
           )}
-          <div className="hidden sm:flex items-center glass rounded-lg p-0.5">
+          <div className="flex items-center glass rounded-lg p-0.5">
             {langs.map((l) => (
               <button
                 key={l}
@@ -444,7 +444,8 @@ function CategoriesSection({ lang, setAge, setGender, setCaste, setOccupation })
 /* Searchable state dropdown                                          */
 /* =================================================================== */
 
-function StateSelect({ value, onChange, placeholder }) {
+function StateSelect({ value, onChange, placeholder, lang }) {
+  const t = translations[lang] || translations.en
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState("")
   const wrapRef = useRef(null)
@@ -719,6 +720,7 @@ function ProfileForm({
                 value={state}
                 onChange={setState}
                 placeholder={t.selectState}
+                lang={lang}
               />
             </Field>
             <Field label={t.homeState}>
@@ -726,6 +728,7 @@ function ProfileForm({
                 value={homeState}
                 onChange={setHomeState}
                 placeholder={t.selectHomeState}
+                lang={lang}
               />
             </Field>
           </div>
@@ -1247,7 +1250,7 @@ function Chatbot({ lang }) {
         ...m,
         {
           role: "ai",
-          text: "I couldn't reach the AI service at https://yojanasathi-api.onrender.com right now. Please make sure the backend is running and try again.",
+          text: "The server is waking up (free tier). Please wait 30 seconds and try again 🙏",
         },
       ])
     } finally {
@@ -1261,14 +1264,14 @@ function Chatbot({ lang }) {
       <button
         onClick={() => setOpen((o) => !o)}
         aria-label={t.openAssistant}
-        className="fixed bottom-6 right-6 z-50 grid place-items-center w-14 h-14 rounded-full bg-[var(--primary)] text-white shadow-xl shadow-[var(--primary)]/40 hover:bg-[var(--primary-dark)] transition-all hover:scale-110"
+        className="fixed bottom-6 right-4 z-50 grid place-items-center w-14 h-14 rounded-full bg-[var(--primary)] text-white shadow-xl shadow-[var(--primary)]/40 hover:bg-[var(--primary-dark)] transition-all hover:scale-110"
       >
         {open ? <X size={24} /> : <MessageCircle size={24} />}
       </button>
 
       {/* Panel */}
       {open && (
-        <div className="slide-in-right fixed bottom-24 right-6 z-50 w-[calc(100vw-3rem)] sm:w-96 h-[34rem] max-h-[75vh] glass rounded-3xl flex flex-col overflow-hidden shadow-2xl">
+        <div className="slide-in-right fixed bottom-24 right-2 left-2 sm:left-auto sm:right-6 z-50 sm:w-96 h-[28rem] max-h-[70vh] glass rounded-3xl flex flex-col overflow-hidden shadow-2xl">
           <header className="flex items-center gap-3 px-5 py-4 border-b">
             <span className="grid place-items-center w-9 h-9 rounded-full bg-[var(--primary)]/15 text-[var(--primary)]">
               <Sparkles size={18} />
