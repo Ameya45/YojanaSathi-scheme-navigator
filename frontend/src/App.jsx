@@ -30,6 +30,7 @@ import {
   Building2,
   Layers,
   Mic,
+  Menu,
 } from "lucide-react"
 import {
   BarChart,
@@ -183,6 +184,7 @@ function CountUp({ end, duration = 1500, suffix = "" }) {
 
 function Navbar({ dark, toggleDark, lang, setLang, user, setShowAuth, setAuthMode, onLogout }) {
   const t = translations[lang] || translations.en
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const links = [
     { label: t.home, id: "hero" },
     { label: t.categoriesNav, id: "categories" },
@@ -190,8 +192,10 @@ function Navbar({ dark, toggleDark, lang, setLang, user, setShowAuth, setAuthMod
     { label: t.about, id: "stats" },
   ]
   const langs = ["EN", "हिं", "मर"]
-  const scrollTo = (id) =>
+  const scrollTo = (id) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })
+    setMobileMenuOpen(false)
+  }
 
   return (
     <nav className="fixed top-0 inset-x-0 z-50 glass border-b">
@@ -220,7 +224,8 @@ function Navbar({ dark, toggleDark, lang, setLang, user, setShowAuth, setAuthMod
           ))}
         </div>
 
-        <div className="flex items-center gap-2">
+        {/* Desktop right-side controls */}
+        <div className="hidden md:flex items-center gap-2">
           {user ? (
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2 glass rounded-lg px-3 py-2 text-sm font-medium text-[var(--foreground)]">
@@ -279,7 +284,104 @@ function Navbar({ dark, toggleDark, lang, setLang, user, setShowAuth, setAuthMod
             {dark ? <Sun size={18} /> : <Moon size={18} />}
           </button>
         </div>
+
+        {/* Mobile right-side controls: dark mode toggle + hamburger */}
+        <div className="flex md:hidden items-center gap-1">
+          <button
+            onClick={toggleDark}
+            aria-label={t.toggleDarkMode}
+            className="grid place-items-center w-10 h-10 rounded-lg glass hover:text-[var(--primary)] transition-colors"
+          >
+            {dark ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
+          <button
+            onClick={() => setMobileMenuOpen((o) => !o)}
+            aria-label="Toggle menu"
+            className="grid place-items-center w-10 h-10 rounded-lg glass hover:text-[var(--primary)] transition-colors"
+          >
+            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
       </div>
+
+      {/* Mobile dropdown menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden glass border-t px-4 py-4 space-y-4 max-h-[calc(100vh-4rem)] overflow-y-auto thin-scroll">
+          <div className="flex flex-col gap-1">
+            {links.map((l) => (
+              <button
+                key={l.id}
+                onClick={() => scrollTo(l.id)}
+                className="w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--surface)] transition-colors"
+              >
+                {l.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex items-center glass rounded-lg p-0.5 w-fit">
+            {langs.map((l) => (
+              <button
+                key={l}
+                onClick={() => {
+                  setLang(l === "EN" ? "en" : l === "हिं" ? "hi" : "mr")
+                  setMobileMenuOpen(false)
+                }}
+                className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-colors ${
+                  lang === (l === "EN" ? "en" : l === "हिं" ? "hi" : "mr")
+                    ? "bg-[var(--primary)] text-white"
+                    : "text-[var(--muted)] hover:text-[var(--foreground)]"
+                }`}
+              >
+                {l}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex flex-col gap-2">
+            {user ? (
+              <>
+                <div className="flex items-center gap-2 glass rounded-lg px-3 py-2.5 text-sm font-medium text-[var(--foreground)]">
+                  <span className="inline-flex h-2 w-2 rounded-full bg-violet-600" />
+                  {user.name || user.email}
+                </div>
+                <button
+                  onClick={() => {
+                    onLogout()
+                    setMobileMenuOpen(false)
+                  }}
+                  className="w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--surface)] transition-colors"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => {
+                    setAuthMode("login")
+                    setShowAuth(true)
+                    setMobileMenuOpen(false)
+                  }}
+                  className="w-full px-4 py-2.5 rounded-lg text-sm font-medium text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--surface)] transition-colors text-center glass"
+                >
+                  Login
+                </button>
+                <button
+                  onClick={() => {
+                    setAuthMode("register")
+                    setShowAuth(true)
+                    setMobileMenuOpen(false)
+                  }}
+                  className="w-full px-4 py-2.5 rounded-lg text-sm font-medium bg-[var(--primary)] text-white hover:bg-[var(--primary-dark)] transition-colors text-center"
+                >
+                  Register
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </nav>
   )
 }
@@ -1271,7 +1373,7 @@ function Chatbot({ lang }) {
 
       {/* Panel */}
       {open && (
-        <div className="slide-in-right fixed bottom-24 right-2 left-2 sm:left-auto sm:right-6 z-50 sm:w-96 h-[28rem] max-h-[70vh] glass rounded-3xl flex flex-col overflow-hidden shadow-2xl">
+        <div className="slide-in-right fixed inset-x-0 bottom-0 left-0 right-0 rounded-t-3xl rounded-b-none h-[60vh] sm:inset-x-auto sm:bottom-24 sm:right-6 sm:left-auto sm:rounded-3xl sm:w-96 sm:h-[28rem] sm:max-h-[70vh] z-50 glass flex flex-col overflow-hidden shadow-2xl">
           <header className="flex items-center gap-3 px-5 py-4 border-b">
             <span className="grid place-items-center w-9 h-9 rounded-full bg-[var(--primary)]/15 text-[var(--primary)]">
               <Sparkles size={18} />
