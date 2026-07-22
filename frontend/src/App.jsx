@@ -197,7 +197,27 @@ function Navbar({ dark, toggleDark, lang, setLang, user, setShowAuth, setAuthMod
     setMobileMenuOpen(false)
   }
 
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden"
+    } else {
+      document.body.style.overflow = ""
+    }
+    return () => {
+      document.body.style.overflow = ""
+    }
+  }, [mobileMenuOpen])
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "Escape") setMobileMenuOpen(false)
+    }
+    document.addEventListener("keydown", onKey)
+    return () => document.removeEventListener("keydown", onKey)
+  }, [])
+
   return (
+    <>
     <nav className="fixed top-0 inset-x-0 z-50 glass border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         <button
@@ -303,10 +323,22 @@ function Navbar({ dark, toggleDark, lang, setLang, user, setShowAuth, setAuthMod
           </button>
         </div>
       </div>
+    </nav>
 
-      {/* Mobile dropdown menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden glass border-t px-4 py-4 space-y-4 max-h-[calc(100vh-4rem)] overflow-y-auto thin-scroll">
+    {/* Mobile menu: dimming scrim + solid (non-glass) panel so Hero content
+        underneath doesn't bleed through, since the fixed nav floats above
+        the page and never actually pushes page content down */}
+    {mobileMenuOpen && (
+      <>
+        <div
+          className="md:hidden fixed inset-0 top-16 z-40 bg-black/50"
+          onClick={() => setMobileMenuOpen(false)}
+          aria-hidden="true"
+        />
+        <div
+          className="md:hidden fixed inset-x-0 top-16 z-50 border-b shadow-2xl px-4 py-5 space-y-4 max-h-[calc(100vh-4rem)] overflow-y-auto thin-scroll"
+          style={{ backgroundColor: "var(--background, #13102A)" }}
+        >
           <div className="flex flex-col gap-1">
             {links.map((l) => (
               <button
@@ -381,8 +413,9 @@ function Navbar({ dark, toggleDark, lang, setLang, user, setShowAuth, setAuthMod
             )}
           </div>
         </div>
-      )}
-    </nav>
+      </>
+    )}
+    </>
   )
 }
 
