@@ -91,4 +91,4 @@ Core features complete: eligibility matching, RAG chatbot, authentication, PDF e
 
 **Ameya Kailas Bhalerao**
 Final-year B.Tech, AI & Data Science — Smt. Indira Gandhi College of Engineering
-[GitHub](https://github.com/Ameya45) · [LinkedIn](https://linkedin.com/in/ameyabhalerao)
+[GitHub](https://github.com/Ameya45) · [LinkedIn](https://www.linkedin.com/in/ameya-bhalerao-a34256287/)
